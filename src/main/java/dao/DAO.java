@@ -1,51 +1,61 @@
 package dao;
 
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
-public abstract class DAO {
+import Utility.Bank_AppConstants;
+
+
+public class DAO {
+
+	private static DAO _instance = null;
+	private Connection conn = null;
 
 	public static boolean verifyConnection(String DB, String userName, String Password) {
 		try (Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres",
-				"Frontier9")){
-					return true;
-				}catch (SQLException e) {
-					// TODO: create logging
-					return false;
-				}
-	} 
+				"Frontier9")) {
+			return true;
+		} catch (SQLException e) {
+			// TODO: create logging
+			return false;
+		}
+	}
+
+	protected DAO() {
+		
+	}
 	
-	public abstract Connection makeConnection(String DB, String userName, String password);
+	public Connection makeConnection () throws SQLException {
+		if (this.conn == null) {
+			
+			String configFilePath = System.getProperty(Bank_AppConstants.CONFIG_FILE);
+
+			try (FileInputStream fis = new FileInputStream(configFilePath)) {
+
+				Properties props = new Properties();
+				props.load(fis);
+
+				this.conn = DriverManager.getConnection(props.getProperty(Bank_AppConstants.DB_URL),
+						props.getProperty(Bank_AppConstants.DB_USER),
+						props.getProperty(Bank_AppConstants.DB_PASS));
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return this.conn;
+	}
+
 	
-	public abstract ResultSet getDBData(String DB, String userName, String password, String tableName, String... columns);
-	
-	public abstract void setDBData(String DB, String userName, String password, String tableName, String... columns);
-	
-	
-	
+	public static DAO get_instance() {
+		if (_instance == null)
+			_instance = new DAO();
+		return _instance;
+	}
+
 }
-//{	
-//		try (Connection conn = DriverManager.getConnection("jdbc:postgresql:/localhost:5432/postgres", "postgres",
-//				"Frontier9")){ // "Try with Resources" block, will auto close so no need for finally block
-//
-//				// step 2 get statement object
-//				Statement stmt = conn.createStatement();
-//
-//				// get resultset object
-//				ResultSet rs = stmt.executeQuery("SELECT lastname FROM employee"); {
-//
-//			// will iterate through resultSet, rs, gathering String objects from name field
-//			// in DB and outputting them in the console
-//			while (rs.next()) {
-//				String name = rs.getString("lastname");
-//				System.out.println(name);
-//			}
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-//}
