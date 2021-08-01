@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import dao.AccountDAO;
 import dao.LedgerDAO;
 import dao.PendingAccountsDAO;
@@ -15,6 +18,9 @@ import pojo.PendingAccountData;
 import pojo.UserData;
 
 public class Menu {
+	
+	private static final Logger logger = LogManager.getLogger(Menu.class);
+	
 	private String userName, password;
 	UserDAO user = new UserDAO();
 	UserData userData = new UserData();
@@ -43,19 +49,14 @@ public class Menu {
 
 //			scan.close();
 		} while (succsessfulLogin == false);
-
+		logger.info("login success", userData);
 	}
 
 	public void displayMenu() {
 		int choice;
-//		Scanner scan = new Scanner(System.in);
+
 		scan.useDelimiter(System.lineSeparator());
-//		try {
-//			System.in.reset();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+
 
 		if (userData.isEE() == false) {
 			do {
@@ -63,7 +64,7 @@ public class Menu {
 						+ "Please make a selection from the following menu:\n" + "1. View Accounts\n"
 						+ "2. Make a Deposit\n" + "3. Make a Withdrawl\n" + "4. Make a Transfer to an Account\n"
 						+ "5. Approve pending Transfers\n" + "6. Apply for a New Account\n" + "0. Quit");
-				// scan.skip(" ");
+				
 				// std::cin.ignore(1000, \n);
 				// choice = stoi(std::cin.getln());
 				if (scan.hasNext())
@@ -168,7 +169,7 @@ public class Menu {
 				try {
 					tempAccount.setRoutingNum(Integer.parseInt(answer));
 				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
+					logger.info("failed int input, makeTransfer");
 					System.out.println("Please enter a valid number!");
 					break;
 				}
@@ -178,7 +179,7 @@ public class Menu {
 				try {
 					tempAccount.setAccountNum(Integer.parseInt(answer));
 				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
+					logger.info("failed int input, makeTransfer");
 					System.out.println("Please enter a valid number!");
 					break;
 				}
@@ -189,7 +190,7 @@ public class Menu {
 				try {
 					debitAccount = Integer.parseInt(answer);
 				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
+					logger.info("failed int input, makeTransfer");
 					System.out.println("Please enter a valid number!");
 					break;
 				}
@@ -199,7 +200,7 @@ public class Menu {
 				try {
 					amtTransfered = Double.parseDouble(answer);
 				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
+					logger.info("failed int input, makeTransfer");
 					System.out.println("Please enter a valid number!");
 					break;
 				}
@@ -233,7 +234,7 @@ public class Menu {
 				try {
 					tempAccount.setAccountNum(Integer.parseInt(answer));
 				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
+					logger.info("failed int input, makeTransfer");
 					System.out.println("Please enter a valid number!");
 					break;
 				}
@@ -243,7 +244,7 @@ public class Menu {
 				try {
 					debitAccount = Integer.parseInt(answer);
 				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
+					logger.info("failed int input, makeTransfer");
 					System.out.println("Please enter a valid number!");
 					break;
 				}
@@ -253,7 +254,7 @@ public class Menu {
 				try {
 					amtTransfered = Double.parseDouble(answer);
 				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
+					logger.info("failed int input, makeTransfer");
 					System.out.println("Please enter a valid number!");
 					break;
 				}
@@ -310,7 +311,7 @@ public class Menu {
 				systemPause();
 
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
+				logger.info("failed int input, approveTransfer");
 				e.printStackTrace();
 				System.out.println("Transaction not found, please try again!");
 			}
@@ -318,7 +319,7 @@ public class Menu {
 	}
 
 	private void createAccount(UserData data) {
-		// TODO Auto-generated method stub
+		
 		String input;
 		double amount = 0.0;
 		PendingAccountsDAO padDAO = new PendingAccountsDAO();
@@ -345,7 +346,7 @@ public class Menu {
 	}
 
 	private void viewCustomerAccounts() {
-		// TODO Auto-generated method stub
+		
 		displayAllAccounts();
 		systemPause();
 	}
@@ -355,7 +356,7 @@ public class Menu {
 		int i = 1;
 		int input;
 		PendingAccountsDAO padDAO = new PendingAccountsDAO();
-		// TODO Auto-generated method stub
+		
 		do {
 			List<PendingAccountData> padList = new ArrayList<PendingAccountData>(padDAO.getAllPending());
 			if (padList.isEmpty()) {
@@ -391,7 +392,7 @@ public class Menu {
 						ledgerDAO.updateLedger(tempLedger);
 					}
 				} catch (Exception e) {
-					// TODO: handle exception
+					
 					System.out.println("Please enter a valid selection!");
 				}
 			}

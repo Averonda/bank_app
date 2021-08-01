@@ -6,22 +6,17 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import Utility.Bank_AppConstants;
 
 public class DAO {
+	
+	private static final Logger logger = LogManager.getLogger(DAO.class);
 
 	private static DAO _instance = null;
 	private Connection conn = null;
-
-	public static boolean verifyConnection(String DB, String userName, String Password) {
-		try (Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres",
-				"Frontier9")) {
-			return true;
-		} catch (SQLException e) {
-			// TODO: create logging
-			return false;
-		}
-	}
 
 	protected DAO() {
 
@@ -33,6 +28,8 @@ public class DAO {
 			String configFilePath = System.getProperty(Bank_AppConstants.CONFIG_FILE);
 
 			try (FileInputStream fis = new FileInputStream(configFilePath)) {
+				
+				logger.info("Config file path: "+configFilePath);
 
 				Properties props = new Properties();
 				props.load(fis);
@@ -41,7 +38,7 @@ public class DAO {
 						props.getProperty(Bank_AppConstants.DB_USER), props.getProperty(Bank_AppConstants.DB_PASS));
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.warn("failed to make db connection");
 			}
 		}
 		return this.conn;
