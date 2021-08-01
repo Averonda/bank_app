@@ -17,7 +17,7 @@ public class UserDAO extends DAO{
 		UserData user = new UserData();
 		try{
 			//should be in try/finally block, but need to prevent con from returning null.
-			con = DAO.get_instance().makeConnection();
+			con = DAO.getInstance().makeConnection();
 			String query = "select * from user_creds where user_name = ? and user_password = ?";
 			
 			PreparedStatement statement = con.prepareStatement(query);

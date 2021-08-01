@@ -3,13 +3,10 @@ package dao;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 
 import Utility.Bank_AppConstants;
-
 
 public class DAO {
 
@@ -27,12 +24,12 @@ public class DAO {
 	}
 
 	protected DAO() {
-		
+
 	}
-	
-	public Connection makeConnection () throws SQLException {
+
+	public Connection makeConnection() throws SQLException {
 		if (this.conn == null) {
-			
+
 			String configFilePath = System.getProperty(Bank_AppConstants.CONFIG_FILE);
 
 			try (FileInputStream fis = new FileInputStream(configFilePath)) {
@@ -41,8 +38,7 @@ public class DAO {
 				props.load(fis);
 
 				this.conn = DriverManager.getConnection(props.getProperty(Bank_AppConstants.DB_URL),
-						props.getProperty(Bank_AppConstants.DB_USER),
-						props.getProperty(Bank_AppConstants.DB_PASS));
+						props.getProperty(Bank_AppConstants.DB_USER), props.getProperty(Bank_AppConstants.DB_PASS));
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -51,8 +47,7 @@ public class DAO {
 		return this.conn;
 	}
 
-	
-	public static DAO get_instance() {
+	public static DAO getInstance() {
 		if (_instance == null)
 			_instance = new DAO();
 		return _instance;

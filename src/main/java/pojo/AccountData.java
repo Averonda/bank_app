@@ -34,6 +34,19 @@ public class AccountData {
 		this.balance = balance;
 	}
 	
+	public AccountData(LedgerData ledger) {
+		this.accountID = ledger.getAccountID();
+		this.userID = ledger.getUserID();
+		this.routingNum = ledger.getRoutingTo();
+		this.accountNum = ledger.getAccountTo();
+	}
+	
+	public AccountData(PendingAccountData pad) {
+		this.userID = pad.getUserID();
+		this.isChecking = pad.isChecking();
+		this.balance = pad.getInitialDeposit();
+	}
+
 	public int getAccountID() {
 		return accountID;
 	}
