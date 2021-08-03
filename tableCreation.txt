@@ -1,0 +1,89 @@
+-- public.user_creds definition
+
+-- Drop table
+
+-- DROP TABLE user_creds;
+
+CREATE TABLE user_creds (
+	user_id serial NOT NULL,
+	user_name varchar(16) NOT NULL,
+	user_password varchar NOT NULL,
+	is_bank_ee bool NOT NULL DEFAULT false,
+	real_first_name varchar NOT NULL,
+	real_last_name varchar NOT NULL,
+	CONSTRAINT user_creds_pk PRIMARY KEY (user_id)
+);
+CREATE INDEX user_creds_user_id_idx ON public.user_creds USING btree (user_id);
+
+-- public.account_info definition
+
+-- Drop table
+
+-- DROP TABLE account_info;
+
+CREATE TABLE account_info (
+	account_id serial NOT NULL,
+	user_id int4 NOT NULL,
+	routing_number int4 NOT NULL DEFAULT 100000001,
+	account_number int4 NOT NULL,
+	is_savings bool NOT NULL DEFAULT false,
+	is_checking bool NOT NULL DEFAULT false,
+	balance float8 NOT NULL DEFAULT 0.00,
+	CONSTRAINT account_info_pk PRIMARY KEY (account_id)
+);
+CREATE INDEX account_info_user_id_idx ON public.account_info USING btree (user_id);
+
+
+-- public.account_info foreign keys
+
+ALTER TABLE public.account_info ADD CONSTRAINT account_info_fk FOREIGN KEY (user_id) REFERENCES user_creds(user_id);
+
+-- public.pending_accts definition
+
+-- Drop table
+
+-- DROP TABLE pending_accts;
+
+CREATE TABLE pending_accts (
+	user_id int4 NOT NULL,
+	initial_deposit float8 NOT NULL,
+	is_checking bool NOT NULL DEFAULT true,
+	pending_id serial NOT NULL,
+	CONSTRAINT pending_accts_pk PRIMARY KEY (pending_id)
+);
+CREATE INDEX pending_accts_user_id_idx ON public.pending_accts USING btree (user_id);
+
+
+-- public.pending_accts foreign keys
+
+ALTER TABLE public.pending_accts ADD CONSTRAINT pending_accts_fk FOREIGN KEY (user_id) REFERENCES user_creds(user_id);
+
+-- public.transaction_ledger definition
+
+-- Drop table
+
+-- DROP TABLE transaction_ledger;
+
+CREATE TABLE transaction_ledger (
+	transaction_id int4 NOT NULL DEFAULT nextval('newtable_transaction_id_seq'::regclass),
+	user_id int4 NOT NULL,
+	routing_num_from int4 NULL,
+	account_num_from int4 NULL,
+	routing_num_to int4 NOT NULL,
+	account_num_to int4 NOT NULL,
+	external_transfer bool NOT NULL DEFAULT false,
+	is_new_account bool NOT NULL DEFAULT false,
+	is_customer_approved bool NOT NULL DEFAULT false,
+	time_performed information_schema."time_stamp" NOT NULL,
+	amount_transfered float8 NOT NULL DEFAULT 0.00,
+	account_id int4 NOT NULL,
+	CONSTRAINT newtable_pk PRIMARY KEY (transaction_id)
+);
+COMMENT ON TABLE public.transaction_ledger IS 'routing_num_from: null for self deposits/withdrawls
+account_num_from: null for self deposits/withdrawls';
+
+
+-- public.transaction_ledger foreign keys
+
+ALTER TABLE public.transaction_ledger ADD CONSTRAINT newtable_fk FOREIGN KEY (user_id) REFERENCES user_creds(user_id);
+ALTER TABLE public.transaction_ledger ADD CONSTRAINT transaction_ledger_fk FOREIGN KEY (account_id) REFERENCES account_info(account_id);

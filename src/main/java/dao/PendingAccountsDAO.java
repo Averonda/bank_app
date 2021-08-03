@@ -14,9 +14,7 @@ public class PendingAccountsDAO extends DAO {
 	private Connection con;
 	
 	public void createPA(PendingAccountData pad) {
-		//Connection conn;
 		try{
-			//should be in try/finally block, but need to prevent con from returning null.
 			con = DAO.getInstance().makeConnection();
 			String query = "insert into pending_accts values (?, ?, ?)";
 			

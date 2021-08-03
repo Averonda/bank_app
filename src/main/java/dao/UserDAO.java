@@ -13,10 +13,8 @@ public class UserDAO extends DAO{
 	private Connection con;
 	
 	public UserData signIn(String userName, String password) throws SQLException {
-		//Connection conn;
 		UserData user = new UserData();
 		try{
-			//should be in try/finally block, but need to prevent con from returning null.
 			con = DAO.getInstance().makeConnection();
 			String query = "select * from user_creds where user_name = ? and user_password = ?";
 			

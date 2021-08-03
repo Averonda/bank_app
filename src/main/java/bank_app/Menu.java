@@ -21,18 +21,18 @@ public class Menu {
 	
 	private static final Logger logger = LogManager.getLogger(Menu.class);
 	
-	private String userName, password;
 	UserDAO user = new UserDAO();
 	UserData userData = new UserData();
 	AccountDAO accountDAO = new AccountDAO();
-	List<AccountData> accounts = new ArrayList<AccountData>();
 	LedgerDAO ledgerDAO = new LedgerDAO();
-	List<LedgerData> ledger = new ArrayList<LedgerData>();
-
 	Scanner scan = new Scanner(System.in);
+	
+	
+
 
 	public void initialLogin() throws SQLException {
 		boolean succsessfulLogin = false;
+		String userName, password;
 		do {
 			scan.useDelimiter(System.lineSeparator());
 			System.out.println("Please login with your username and password:\nUsername:");
@@ -290,6 +290,7 @@ public class Menu {
 
 		int choice;
 		String input;
+		List<LedgerData> ledger = new ArrayList<LedgerData>();
 		scan.useDelimiter(System.lineSeparator());
 		ledger = ledgerDAO.getLedgerDataForCustApproval(data);
 		if (ledger.size() == 0) {
@@ -433,6 +434,7 @@ public class Menu {
 
 	private void displayAccounts(UserData data) {
 
+		List<AccountData> accounts = new ArrayList<AccountData>();
 		accounts = accountDAO.getAccounts(data);
 		System.out.println("Your Accounts: ");
 		for (AccountData accountData : accounts) {
@@ -448,6 +450,7 @@ public class Menu {
 
 	private void displayAllAccounts() {
 
+		List<AccountData> accounts = new ArrayList<AccountData>();
 		accounts = accountDAO.getAllAccounts();
 		System.out.println("Your Accounts: ");
 		for (AccountData accountData : accounts) {
@@ -470,6 +473,7 @@ public class Menu {
 
 	private void changeBalance(String type, UserData data) {
 
+		List<AccountData> accounts = new ArrayList<AccountData>();
 		scan.useDelimiter(System.lineSeparator());
 		int changeAccount;
 		double changeAmt;
