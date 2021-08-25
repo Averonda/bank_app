@@ -46,7 +46,7 @@ public class PendingAccountsDAO extends DAO {
 			ResultSet results = statement.executeQuery();
 
 			while (results.next()) {
-				PendingAccountData pad = new PendingAccountData(results.getInt(1), results.getDouble(2), results.getBoolean(3));
+				PendingAccountData pad = new PendingAccountData(results.getInt(1), results.getDouble(2), results.getBoolean(3), results.getInt(4));
 				paccountList.add(pad);
 			}
 
@@ -76,5 +76,26 @@ public class PendingAccountsDAO extends DAO {
 			e.printStackTrace();
 			return 0;
 		}
+	}
+	
+	public void dropRow(PendingAccountData pad) {
+		try{
+			con = DAO.getInstance().makeConnection();
+			String query = "DELETE FROM pending_accts"
+					+ "	WHERE pending_id= ?;";
+			
+			PreparedStatement statement = con.prepareStatement(query);
+			
+			statement.setInt(1, pad.getPendingID());
+			
+			
+			statement.executeUpdate();
+			
+			
+			
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		
 	}
 }

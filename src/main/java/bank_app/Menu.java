@@ -35,6 +35,7 @@ public class Menu {
 		String userName, password;
 		do {
 			scan.useDelimiter(System.lineSeparator());
+			
 			System.out.println("Please login with your username and password:\nUsername:");
 			userName = scan.next();
 			// InputScanner.getInput();
@@ -43,7 +44,11 @@ public class Menu {
 //			if(password == null)
 //				password = InputScanner.getInput();
 
-			userData = user.signIn(userName, password);
+			try {
+				userData = user.signIn(userName, password);
+			} catch (SQLException e) {
+				System.out.println("Incorrect username or password, please try again!");
+			}
 			if (user != null)
 				succsessfulLogin = true;
 
@@ -313,7 +318,7 @@ public class Menu {
 
 			} catch (NumberFormatException e) {
 				logger.info("failed int input, approveTransfer");
-				e.printStackTrace();
+//				e.printStackTrace();
 				System.out.println("Transaction not found, please try again!");
 			}
 		}
@@ -383,6 +388,7 @@ public class Menu {
 						newAcct.setSavings(false);
 						LedgerData tempLedger = new LedgerData(newAcct);
 						ledgerDAO.updateLedger(tempLedger);
+						padDAO.dropRow(padList.get(input));
 
 					}else {
 						AccountData newAcct = new AccountData(padList.get(input));
@@ -391,6 +397,7 @@ public class Menu {
 						newAcct.setChecking(false);
 						LedgerData tempLedger = new LedgerData(newAcct);
 						ledgerDAO.updateLedger(tempLedger);
+						padDAO.dropRow(padList.get(input));
 					}
 				} catch (Exception e) {
 					

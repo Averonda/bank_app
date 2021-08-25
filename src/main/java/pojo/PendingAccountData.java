@@ -2,7 +2,7 @@ package pojo;
 
 public class PendingAccountData {
 	
-	private int userID;
+	private int userID, pendingID;;
 	private double initialDeposit;
 	private boolean isChecking;
 	
@@ -10,12 +10,20 @@ public class PendingAccountData {
 	public PendingAccountData() {
 		super();
 	}
+	public PendingAccountData(int userID, double initialDeposit, boolean isChecking, int pendingID) {
+		super();
+		this.userID = userID;
+		this.initialDeposit = initialDeposit;
+		this.isChecking = isChecking;
+		this.pendingID = pendingID;
+	}
 	public PendingAccountData(int userID, double initialDeposit, boolean isChecking) {
 		super();
 		this.userID = userID;
 		this.initialDeposit = initialDeposit;
 		this.isChecking = isChecking;
 	}
+	
 	public int getUserID() {
 		return userID;
 	}
@@ -34,6 +42,11 @@ public class PendingAccountData {
 	public void setChecking(boolean isChecking) {
 		this.isChecking = isChecking;
 	}
-	
+	public int getPendingID() {
+		return pendingID;
+	}
+	public void setPendingID(int pendingID) {
+		this.pendingID = pendingID;
+	}
 	
 }
